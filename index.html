@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ORN Europe — UK &amp; India Structure</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 <style>
 :root{
   --navy:#0a1428;--navy2:#1a2d4a;--gold:#b8960c;--gold2:#d4af37;
@@ -149,6 +147,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
   .flow-steps{grid-template-columns:1fr 1fr;gap:12px;}
   .flow-step::after{display:none;}
 }
+
+/* STAFF POOL */
+.staff-pool{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.sp-card{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1.5px solid var(--border);border-radius:3px;background:#fff;cursor:pointer;transition:all .15s;}
+.sp-card:hover{border-color:var(--teal);background:#f0fdf9;}
+.sp-card.assigned{border-color:#b2f0e0;background:#f0fdf9;}
+.sp-card.assigned .sp-av{background:var(--teal);color:#fff;}
+.sp-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.sp-vacant{background:#f1f5f9;color:#94a3b8;border:1.5px dashed #cbd5e1;}
+.sp-info{flex:1;min-width:0;}
+.sp-name{font-size:12px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-role{font-size:10px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sp-edit{font-size:12px;color:var(--sub);flex-shrink:0;opacity:0.5;}
+.sp-card:hover .sp-edit{opacity:1;color:var(--teal);}
 </style>
 </head>
 <body>
@@ -199,7 +211,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card" onclick="togglePerson('ajay')">
         <div class="avatar av-navy">AK</div>
         <div class="person-info">
-          <div class="person-name">Ajay Kawa</div>
+          <div class="person-name" id="pname-ajay">Ajay Kawa</div>
           <div class="person-role">COO Europe &mdash; Reports to Raj Kumar, COO Global</div>
           <div class="person-badges">
             <span class="badge badge-navy">Regional Head</span>
@@ -277,8 +289,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('saif')">
         <div class="avatar av-teal">SK</div>
         <div class="person-info">
-          <div class="person-name">Saif Ansar Khan</div>
-          <div class="person-role">Head &mdash; Contracting UK &amp; Europe &middot; 40 in tree</div>
+          <div class="person-name" id="pname-saif">Saif Ansar Khan</div>
+          <div class="person-role" id="prole-saif">Head &mdash; Contracting UK &amp; Europe &middot; 40 in tree</div>
           <div class="person-badges">
             <span class="badge badge-teal">Mumbai Lead</span>
             <span class="badge badge-teal">40 Staff Tree</span>
@@ -307,8 +319,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('ronak')">
         <div class="avatar av-teal">RO</div>
         <div class="person-info">
-          <div class="person-name">Ronak</div>
-          <div class="person-role">Destination Manager &mdash; Europe</div>
+          <div class="person-name" id="pname-ronak">Ronak</div>
+          <div class="person-role" id="prole-ronak">Destination Manager &mdash; Europe</div>
           <div class="person-badges"><span class="badge badge-teal">Destination Expert</span><span class="badge badge-gold">Product Creation</span></div>
         </div>
         <div class="pchev">&#9660;</div>
@@ -333,8 +345,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('amit')">
         <div class="avatar av-teal">AM</div>
         <div class="person-info">
-          <div class="person-name">Amit</div>
-          <div class="person-role">Product Manager &mdash; Europe</div>
+          <div class="person-name" id="pname-amit">Amit</div>
+          <div class="person-role" id="prole-amit">Product Manager &mdash; Europe</div>
           <div class="person-badges"><span class="badge badge-teal">Product Build</span><span class="badge badge-gold">Website Content</span><span class="badge badge-teal">Tech Liaison</span></div>
         </div>
         <div class="pchev">&#9660;</div>
@@ -361,8 +373,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('puja')">
         <div class="avatar av-teal">PO</div>
         <div class="person-info">
-          <div class="person-name">Puja Vivekanand Onekar</div>
-          <div class="person-role">FIT Ops Head &mdash; Europe &middot; 7 direct reports</div>
+          <div class="person-name" id="pname-puja">Puja Vivekanand Onekar</div>
+          <div class="person-role" id="prole-puja">FIT Ops Head &mdash; Europe &middot; 7 direct reports</div>
           <div class="person-badges"><span class="badge badge-teal">FIT Operations</span><span class="badge badge-navy">7 Reports</span></div>
         </div>
         <div class="pchev">&#9660;</div>
@@ -378,16 +390,44 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
             <li>Produces daily Europe operations report &mdash; bookings in process, upcoming departures, issues flagged</li>
             <li>Manages her team of 7 Europe FIT executives &mdash; task allocation, quality checks, training</li>
           </ul>
-          <div class="ds-title">Team &mdash; 7 FIT Operations Executives</div>
-          <div style="background:#fef9c3;border-left:3px solid var(--gold);padding:8px 10px;border-radius:3px;margin-bottom:8px;font-size:10px;color:#854d0e;">&#9432; Individual names not in org chart for this sub-team. Use Edit to add names.</div>
-          <div class="reports-grid">
-            <div class="rchip" style="border-left:2px solid var(--teal);">Balachandar H Benakatti<span>Ops Exec Europe &mdash; 1 report</span></div>
-            <div class="rchip">FIT Operations Exec<span>Europe FIT Ops</span></div>
-            <div class="rchip">FIT Operations Exec<span>Europe FIT Ops</span></div>
-            <div class="rchip">FIT Operations Exec<span>Europe FIT Ops</span></div>
-            <div class="rchip">FIT Operations Exec<span>Europe FIT Ops</span></div>
-            <div class="rchip">FIT Operations Exec<span>Europe FIT Ops</span></div>
-            <div class="rchip">FIT Operations Exec<span>Europe FIT Ops</span></div>
+          
+          <div class="ds-title">Team &mdash; 7 FIT Operations Executives (click to assign)</div>
+          <div class="staff-pool">
+            <div class="sp-card" onclick="openEditModal('puja_t1','Open Position','FIT Operations Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-puja_t1">Open Position</div><div class="sp-role" id="prole-puja_t1">FIT Operations Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('puja_t2','Open Position','FIT Operations Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-puja_t2">Open Position</div><div class="sp-role" id="prole-puja_t2">FIT Operations Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('puja_t3','Open Position','FIT Operations Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-puja_t3">Open Position</div><div class="sp-role" id="prole-puja_t3">FIT Operations Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('puja_t4','Open Position','FIT Operations Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-puja_t4">Open Position</div><div class="sp-role" id="prole-puja_t4">FIT Operations Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('puja_t5','Open Position','FIT Operations Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-puja_t5">Open Position</div><div class="sp-role" id="prole-puja_t5">FIT Operations Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('puja_t6','Open Position','FIT Operations Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-puja_t6">Open Position</div><div class="sp-role" id="prole-puja_t6">FIT Operations Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('puja_t7','Open Position','FIT Operations Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-puja_t7">Open Position</div><div class="sp-role" id="prole-puja_t7">FIT Operations Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
           </div>
           <div style="margin-top:10px;"><button class="btn btn-outline" style="font-size:11px;padding:5px 12px;" onclick="openEditModal('puja','Puja Vivekanand Onekar','FIT Ops Head Europe')">&#9998; Edit</button></div>
         </div>
@@ -396,8 +436,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('bala')">
         <div class="avatar av-slate">BH</div>
         <div class="person-info">
-          <div class="person-name">Balachandar H Benakatti</div>
-          <div class="person-role">Operation Executive &mdash; Europe &middot; 1 report</div>
+          <div class="person-name" id="pname-bala">Balachandar H Benakatti</div>
+          <div class="person-role" id="prole-bala">Operation Executive &mdash; Europe &middot; 1 report</div>
           <div class="person-badges"><span class="badge badge-teal">Europe Ops</span></div>
         </div>
         <div class="pchev">&#9660;</div>
@@ -421,8 +461,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('amir')">
         <div class="avatar av-gold">AS</div>
         <div class="person-info">
-          <div class="person-name">Amir Shafi Shaikh</div>
-          <div class="person-role">Tour Manager &mdash; Europe &middot; 18 direct reports</div>
+          <div class="person-name" id="pname-amir">Amir Shafi Shaikh</div>
+          <div class="person-role" id="prole-amir">Tour Manager &mdash; Europe &middot; 18 direct reports</div>
           <div class="person-badges"><span class="badge badge-gold">Sales Lead</span><span class="badge badge-navy">18 Reports</span><span class="badge badge-teal">Agent Relations</span></div>
         </div>
         <div class="pchev">&#9660;</div>
@@ -440,27 +480,99 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
             <li>Weekly sales pipeline report to Saif &mdash; leads, quotations, confirmed bookings, revenue forecast</li>
             <li>Manages Europe promotional campaigns in coordination with UK marketing direction</li>
           </ul>
-          <div class="ds-title">Team of 18 &mdash; Europe Sales &amp; Destination Experts</div>
-          <div style="background:#fef9c3;border-left:3px solid var(--gold);padding:8px 10px;border-radius:3px;margin-bottom:8px;font-size:10px;color:#854d0e;">&#9432; Individual names not listed in the global org chart for this sub-team. Add via the Edit button or update directly in the org chart.</div>
-          <div class="reports-grid">
-            <div class="rchip" style="border-left:2px solid var(--teal);">Europe Dest. Expert<span>B2C Sales &mdash; UK/Europe</span></div>
-            <div class="rchip" style="border-left:2px solid var(--teal);">Europe Dest. Expert<span>B2C Sales &mdash; UK/Europe</span></div>
-            <div class="rchip" style="border-left:2px solid var(--teal);">Europe Dest. Expert<span>B2C Sales &mdash; UK/Europe</span></div>
-            <div class="rchip" style="border-left:2px solid var(--teal);">Europe Dest. Expert<span>B2C Sales &mdash; UK/Europe</span></div>
-            <div class="rchip" style="border-left:2px solid var(--teal);">Europe Dest. Expert<span>B2C Sales &mdash; UK/Europe</span></div>
-            <div class="rchip" style="border-left:2px solid var(--teal);">Europe Dest. Expert<span>B2C Sales &mdash; UK/Europe</span></div>
-            <div class="rchip" style="border-left:2px solid var(--gold);">Agent Exec<span>B2B Agent Sales</span></div>
-            <div class="rchip" style="border-left:2px solid var(--gold);">Agent Exec<span>B2B Agent Sales</span></div>
-            <div class="rchip" style="border-left:2px solid var(--gold);">Agent Exec<span>B2B Agent Sales</span></div>
-            <div class="rchip" style="border-left:2px solid var(--gold);">Agent Exec<span>B2B Agent Sales</span></div>
-            <div class="rchip" style="border-left:2px solid var(--gold);">Agent Exec<span>B2B Agent Sales</span></div>
-            <div class="rchip" style="border-left:2px solid var(--gold);">Agent Exec<span>B2B Agent Sales</span></div>
-            <div class="rchip">Groups &amp; MICE Exec<span>Group Europe</span></div>
-            <div class="rchip">Sales Support Exec<span>Quotations</span></div>
-            <div class="rchip">Sales Support Exec<span>Quotations</span></div>
-            <div class="rchip">Sales Support Exec<span>Follow-up</span></div>
-            <div class="rchip">Sr Sales Exec<span>KAM Europe</span></div>
-            <div class="rchip">Sales Admin<span>CRM &amp; Reporting</span></div>
+          
+          <div class="ds-title">Team of 18 &mdash; Europe Sales &amp; Destination Experts (click any to assign)</div>
+          <div class="staff-pool">
+            <div class="sp-card" onclick="openEditModal('amir_t1','Open Position','Europe Destination Expert')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t1">Open Position</div><div class="sp-role" id="prole-amir_t1">Europe Destination Expert &mdash; B2C</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t2','Open Position','Europe Destination Expert')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t2">Open Position</div><div class="sp-role" id="prole-amir_t2">Europe Destination Expert &mdash; B2C</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t3','Open Position','Europe Destination Expert')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t3">Open Position</div><div class="sp-role" id="prole-amir_t3">Europe Destination Expert &mdash; B2C</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t4','Open Position','Europe Destination Expert')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t4">Open Position</div><div class="sp-role" id="prole-amir_t4">Europe Destination Expert &mdash; B2C</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t5','Open Position','Europe Destination Expert')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t5">Open Position</div><div class="sp-role" id="prole-amir_t5">Europe Destination Expert &mdash; B2C</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t6','Open Position','Europe Destination Expert')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t6">Open Position</div><div class="sp-role" id="prole-amir_t6">Europe Destination Expert &mdash; B2C</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t7','Open Position','Europe Agent Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t7">Open Position</div><div class="sp-role" id="prole-amir_t7">Europe Agent Executive &mdash; B2B</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t8','Open Position','Europe Agent Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t8">Open Position</div><div class="sp-role" id="prole-amir_t8">Europe Agent Executive &mdash; B2B</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t9','Open Position','Europe Agent Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t9">Open Position</div><div class="sp-role" id="prole-amir_t9">Europe Agent Executive &mdash; B2B</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t10','Open Position','Europe Agent Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t10">Open Position</div><div class="sp-role" id="prole-amir_t10">Europe Agent Executive &mdash; B2B</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t11','Open Position','Europe Agent Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t11">Open Position</div><div class="sp-role" id="prole-amir_t11">Europe Agent Executive &mdash; B2B</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t12','Open Position','Europe Agent Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t12">Open Position</div><div class="sp-role" id="prole-amir_t12">Europe Agent Executive &mdash; B2B</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t13','Open Position','Groups &amp; MICE Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t13">Open Position</div><div class="sp-role" id="prole-amir_t13">Groups &amp; MICE Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t14','Open Position','Sales Support Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t14">Open Position</div><div class="sp-role" id="prole-amir_t14">Sales Support Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t15','Open Position','Sales Support Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t15">Open Position</div><div class="sp-role" id="prole-amir_t15">Sales Support Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t16','Open Position','Sales Support Executive')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t16">Open Position</div><div class="sp-role" id="prole-amir_t16">Sales Support Executive</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t17','Open Position','Senior Sales Executive &mdash; KAM')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t17">Open Position</div><div class="sp-role" id="prole-amir_t17">Senior Sales Executive &mdash; KAM</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
+            <div class="sp-card" onclick="openEditModal('amir_t18','Open Position','Sales Admin &mdash; CRM &amp; Reporting')">
+              <div class="sp-av sp-vacant">?</div>
+              <div class="sp-info"><div class="sp-name" id="pname-amir_t18">Open Position</div><div class="sp-role" id="prole-amir_t18">Sales Admin &mdash; CRM &amp; Reporting</div></div>
+              <div class="sp-edit">&#9998;</div>
+            </div>
           </div>
           <div style="margin-top:10px;"><button class="btn btn-outline" style="font-size:11px;padding:5px 12px;" onclick="openEditModal('amir','Amir Shafi Shaikh','Tour Manager Europe')">&#9998; Edit</button></div>
         </div>
@@ -471,8 +583,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('disha')">
         <div class="avatar av-purple">DM</div>
         <div class="person-info">
-          <div class="person-name">Disha Mooljee</div>
-          <div class="person-role">Sr Product Manager &mdash; Mumbai &middot; 33 direct reports</div>
+          <div class="person-name" id="pname-disha">Disha Mooljee</div>
+          <div class="person-role" id="prole-disha">Sr Product Manager &mdash; Mumbai &middot; 33 direct reports</div>
           <div class="person-badges"><span class="badge badge-purple">Product Loading</span><span class="badge badge-purple">33 Reports</span><span class="badge badge-gold">Reports to Vinay</span></div>
         </div>
         <div class="pchev">&#9660;</div>
@@ -533,8 +645,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('techpb')">
         <div class="avatar" style="background:#1e3a5f;color:#93c5fd;">PB</div>
         <div class="person-info">
-          <div class="person-name">Product Builder &mdash; Europe</div>
-          <div class="person-role">Tour &amp; Package Build on TripFactory Platform</div>
+          <div class="person-name" id="pname-techpb">Product Builder &mdash; Europe</div>
+          <div class="person-role" id="prole-techpb">Tour &amp; Package Build on TripFactory Platform</div>
           <div class="person-badges"><span class="badge badge-navy">Product Build</span><span class="badge badge-teal">Reports to Amit</span><span class="badge badge-gold">New Role</span></div>
         </div>
         <div class="pchev">&#9660;</div>
@@ -559,8 +671,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
       <div class="person-card india-person" onclick="togglePerson('techpd')">
         <div class="avatar" style="background:#5b21b6;color:#ddd6fe;">PD</div>
         <div class="person-info">
-          <div class="person-name">Product Designer &mdash; Europe</div>
-          <div class="person-role">Visual Design, Website Content &amp; Marketing Assets</div>
+          <div class="person-name" id="pname-techpd">Product Designer &mdash; Europe</div>
+          <div class="person-role" id="prole-techpd">Visual Design, Website Content &amp; Marketing Assets</div>
           <div class="person-badges"><span class="badge badge-purple">Product Design</span><span class="badge badge-teal">Reports to Amit</span><span class="badge badge-gold">New Role</span></div>
         </div>
         <div class="pchev">&#9660;</div>
@@ -628,8 +740,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
     </div>
     <div class="modal-body">
       <input type="hidden" id="edit-id">
-      <div class="fg"><label>Full Name</label><input type="text" id="edit-name"></div>
-      <div class="fg"><label>Role / Title</label><input type="text" id="edit-role"></div>
+      <div class="fg"><label>Full Name</label><input type="text" id="edit-name" placeholder="Full name"></div>
+      <div class="fg"><label>Role / Title</label><input type="text" id="edit-role" placeholder="Job title / role"></div>
+      <div class="fg"><label>Initials (shown in avatar)</label><input type="text" id="edit-initials" placeholder="e.g. SK" maxlength="3"></div>
       <div class="fg"><label>Team</label>
         <select id="edit-team">
           <option value="uk">UK Office</option>
@@ -646,6 +759,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
     </div>
     <div class="modal-ftr">
       <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn" style="background:#fde8e8;color:#991b1b;border:1px solid #fca5a5;" onclick="clearRole()">&#128465; Mark Vacant</button>
       <button class="btn btn-navy" onclick="saveRole()">&#128190; Save</button>
     </div>
   </div>
@@ -689,107 +803,173 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:va
 
 <script>
 
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyDemo-Replace-With-Your-Key",
-  authDomain: "tripfactory-orgchart.firebaseapp.com",
-  projectId: "tripfactory-orgchart",
-  storageBucket: "tripfactory-orgchart.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef123456"
-};
+// ─── STORAGE: localStorage (instant, no config needed) + Firebase ready ───
+const COLLECTION = 'orn_europe_structure';
 
-let db = null;
-try {
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.firestore();
-  loadFromFirebase();
-} catch(e) {
-  console.log('Firebase not configured');
+function storageGet(id){ try{ return JSON.parse(localStorage.getItem(COLLECTION+'_'+id)||'null'); }catch(e){ return null; } }
+function storageSet(id, data){ try{ localStorage.setItem(COLLECTION+'_'+id, JSON.stringify(data)); return true; }catch(e){ return false; } }
+function storageGetAll(){ 
+  var all = {};
+  for(var i=0;i<localStorage.length;i++){
+    var k = localStorage.key(i);
+    if(k && k.indexOf(COLLECTION+'_')===0){
+      var id = k.replace(COLLECTION+'_','');
+      try{ all[id] = JSON.parse(localStorage.getItem(k)); }catch(e){}
+    }
+  }
+  return all;
 }
 
-function loadFromFirebase(){
+// ─── Firebase (optional — paste your config to enable cloud sync) ───
+var FIREBASE_CONFIG = null;
+// To enable: set FIREBASE_CONFIG = { apiKey:'...', projectId:'...', ... }
+// Then add: // And:      var db = null;
+function initFirebase(){
+  if(!FIREBASE_CONFIG) return;
+  try{
+    if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+    syncFromFirebase();
+  }catch(e){ console.log('Firebase unavailable:', e.message); }
+}
+
+function syncFromFirebase(){
   if(!db) return;
-  db.collection('europe_structure').get().then(function(snap){
-    snap.forEach(function(doc){
-      var data = doc.data();
-      var nameEl = document.getElementById('name-' + doc.id);
-      var roleEl = document.getElementById('role-' + doc.id);
-      if(nameEl) nameEl.textContent = data.name;
-      if(roleEl) roleEl.textContent = data.role;
-    });
-  }).catch(function(e){ console.log('Firebase load:', e); });
+  db.collection(COLLECTION).get().then(function(snap){
+    snap.forEach(function(doc){ applyPersonData(doc.id, doc.data()); });
+  }).catch(function(e){ console.log('Firebase sync error:', e); });
 }
 
+function saveToFirebase(id, data){
+  if(!db) return;
+  db.collection(COLLECTION).doc(id).set(data).catch(function(e){ console.log('Firebase save error:', e); });
+}
+
+// ─── Apply saved data to DOM ───
+function applyPersonData(id, data){
+  if(!data) return;
+  var nameEl = document.getElementById('pname-'+id);
+  var roleEl = document.getElementById('prole-'+id);
+  var initEl = document.getElementById('pinit-'+id);
+  if(data.name && nameEl){
+    nameEl.textContent = data.name;
+    // Mark sp-card as assigned if it has a real name
+    var card = nameEl.closest ? nameEl.closest('.sp-card') : null;
+    if(card && data.name !== 'Open Position' && data.name.trim() !== ''){
+      card.classList.add('assigned');
+      var av = card.querySelector('.sp-av');
+      if(av){
+        av.classList.remove('sp-vacant');
+        // Set initials from name
+        var parts = data.name.trim().split(' ');
+        var inits = parts.length>1 ? parts[0][0]+parts[parts.length-1][0] : parts[0].substring(0,2);
+        av.textContent = data.initials || inits.toUpperCase();
+      }
+    }
+  }
+  if(data.role && roleEl) roleEl.textContent = data.role;
+  if(data.initials && initEl) initEl.textContent = data.initials;
+  if(data.tasks){
+    var el = document.getElementById('ptasks-'+id);
+    if(el){
+      var lines = data.tasks.split('\n').filter(function(l){ return l.trim(); });
+      el.innerHTML = lines.map(function(l){ return '<li>'+l.trim()+'</li>'; }).join('');
+    }
+  }
+  if(data.notes){
+    var el = document.getElementById('pnotes-'+id);
+    if(el) el.textContent = data.notes;
+  }
+}
+
+// ─── Load all saved data on start ───
+window.addEventListener('DOMContentLoaded', function(){
+  var all = storageGetAll();
+  Object.keys(all).forEach(function(id){ applyPersonData(id, all[id]); });
+  initFirebase();
+});
+
+// ─── Toggle expand/collapse ───
 function togglePerson(id){
-  var det = document.getElementById('det-' + id);
+  var det = document.getElementById('det-'+id);
   if(!det) return;
-  det.classList.toggle('open');
-  var cards = document.querySelectorAll('.person-card');
-  for(var i=0;i<cards.length;i++){
-    var oc = cards[i].getAttribute('onclick') || '';
-    if(oc.indexOf(id) > -1){
-      cards[i].classList.toggle('expanded');
-      break;
+  var isOpen = det.classList.contains('open');
+  // Close all others first for clean UX
+  document.querySelectorAll('.person-details.open').forEach(function(d){ d.classList.remove('open'); });
+  document.querySelectorAll('.person-card.expanded').forEach(function(c){ c.classList.remove('expanded'); });
+  if(!isOpen){
+    det.classList.add('open');
+    var cards = document.querySelectorAll('.person-card');
+    for(var i=0;i<cards.length;i++){
+      var oc = cards[i].getAttribute('onclick')||'';
+      if(oc.indexOf("'"+id+"'")>-1){ cards[i].classList.add('expanded'); break; }
     }
   }
 }
 
+// ─── Edit modal ───
+var currentEditId = null;
+
 function openEditModal(id, name, role){
+  currentEditId = id;
+  var saved = storageGet(id);
+  // Also check live DOM for current name (in case it was set this session)
+  var liveNameEl = document.getElementById('pname-'+id);
+  var liveRoleEl = document.getElementById('prole-'+id);
+  var liveName = liveNameEl ? liveNameEl.textContent : name;
+  var liveRole = liveRoleEl ? liveRoleEl.textContent : role;
   document.getElementById('edit-id').value = id;
-  document.getElementById('edit-name').value = name;
-  document.getElementById('edit-role').value = role;
-  document.getElementById('edit-tasks').value = '';
-  document.getElementById('edit-notes').value = '';
-  document.getElementById('modal-title').textContent = 'Edit — ' + name;
+  document.getElementById('edit-name').value = saved && saved.name ? saved.name : (liveName !== 'Open Position' ? liveName : name);
+  document.getElementById('edit-role').value = saved && saved.role ? saved.role : liveRole;
+  document.getElementById('edit-initials').value = saved && saved.initials ? saved.initials : '';
+  document.getElementById('edit-reports').value = saved && saved.reports ? saved.reports : '';
+  document.getElementById('edit-tasks').value = saved && saved.tasks ? saved.tasks : '';
+  document.getElementById('edit-notes').value = saved && saved.notes ? saved.notes : '';
+  var displayName = saved && saved.name ? saved.name : (liveName !== 'Open Position' ? liveName : name);
+  document.getElementById('modal-title').textContent = 'Assign / Edit — ' + displayName;
   document.getElementById('editModal').classList.add('open');
+  setTimeout(function(){ document.getElementById('edit-name').focus(); }, 100);
 }
 
 function closeModal(){
   document.getElementById('editModal').classList.remove('open');
-}
-
-function openAddModal(){
-  document.getElementById('addModal').classList.add('open');
-}
-
-function closeAddModal(){
-  document.getElementById('addModal').classList.remove('open');
+  currentEditId = null;
 }
 
 function saveRole(){
   var id = document.getElementById('edit-id').value;
   var name = document.getElementById('edit-name').value.trim();
   var role = document.getElementById('edit-role').value.trim();
+  var initials = document.getElementById('edit-initials').value.trim();
+  var reports = document.getElementById('edit-reports').value;
   var tasks = document.getElementById('edit-tasks').value.trim();
   var notes = document.getElementById('edit-notes').value.trim();
-  var team = document.getElementById('edit-team').value;
-  if(!name || !role){ alert('Please enter a name and role.'); return; }
-  var data = { name: name, role: role, tasks: tasks, notes: notes, team: team, updated: new Date().toISOString() };
-  if(db){
-    db.collection('europe_structure').doc(id).set(data).then(function(){
-      showSaved();
-      closeModal();
-    }).catch(function(e){
-      alert('Firebase not configured. Changes visible locally only.');
-      closeModal();
-    });
-  } else {
-    showSaved();
-    closeModal();
-  }
-  // Update DOM
-  var cards = document.querySelectorAll('.person-card');
-  for(var i=0;i<cards.length;i++){
-    var oc = cards[i].getAttribute('onclick') || '';
-    if(oc.indexOf(id) > -1){
-      var n = cards[i].querySelector('.person-name');
-      var r = cards[i].querySelector('.person-role');
-      if(n) n.textContent = name;
-      if(r) r.textContent = role;
-      break;
-    }
-  }
+
+  if(!name){ alert('Please enter a name.'); return; }
+
+  var data = { name:name, role:role, initials:initials, reports:reports, tasks:tasks, notes:notes, updated: new Date().toISOString() };
+
+  // Save locally
+  var ok = storageSet(id, data);
+
+  // Apply to DOM immediately
+  applyPersonData(id, data);
+
+  // Sync to Firebase if available
+  saveToFirebase(id, data);
+
+  showSaved(ok ? '&#10003; Saved' : '&#10003; Updated (storage full — clear browser data)');
+  closeModal();
+}
+
+// ─── Add modal ───
+function openAddModal(){
+  document.getElementById('addModal').classList.add('open');
+  setTimeout(function(){ document.getElementById('add-name').focus(); }, 100);
+}
+
+function closeAddModal(){
+  document.getElementById('addModal').classList.remove('open');
 }
 
 function addRole(){
@@ -798,39 +978,56 @@ function addRole(){
   var team = document.getElementById('add-team').value;
   var reports = document.getElementById('add-reports').value;
   var tasks = document.getElementById('add-tasks').value.trim();
-  if(!name || !role){ alert('Please enter a name and role.'); return; }
-  var id = name.toLowerCase().replace(/\s+/g,'_') + '_' + Date.now();
-  var data = { name: name, role: role, team: team, reports: reports, tasks: tasks, added: new Date().toISOString() };
-  if(db){
-    db.collection('europe_structure').doc(id).set(data).then(function(){
-      showSaved();
-      closeAddModal();
-      alert(name + ' added successfully. Update the HTML to show them in the chart.');
-    }).catch(function(e){
-      alert('Firebase error: ' + e.message);
-    });
-  } else {
-    showSaved();
-    closeAddModal();
-    alert(name + ' added locally. Configure Firebase to save permanently.');
-  }
+
+  if(!name||!role){ alert('Please enter a name and role.'); return; }
+
+  var id = name.toLowerCase().replace(/[^a-z0-9]/g,'_') + '_' + Date.now();
+  var data = { name:name, role:role, team:team, reports:reports, tasks:tasks, added: new Date().toISOString() };
+
+  storageSet(id, data);
+  saveToFirebase(id, data);
+
+  showSaved('&#43; '+name+' added');
+  closeAddModal();
+  document.getElementById('add-name').value='';
+  document.getElementById('add-role').value='';
+  document.getElementById('add-tasks').value='';
+  alert(name+' saved. To show them in the chart, use the Edit button on the nearest role, or update the HTML directly.');
 }
 
-function showSaved(){
+function clearRole(){
+  var id = document.getElementById('edit-id').value;
+  if(!id) return;
+  var data = { name:'Open Position', role: storageGet(id) ? (storageGet(id).role||'Open Position') : 'Open Position', initials:'', tasks:'', notes:'', updated: new Date().toISOString() };
+  storageSet(id, data);
+  // Reset DOM
+  var nameEl = document.getElementById('pname-'+id);
+  var roleEl = document.getElementById('prole-'+id);
+  if(nameEl) nameEl.textContent = 'Open Position';
+  var card = nameEl ? (nameEl.closest ? nameEl.closest('.sp-card') : null) : null;
+  if(card){
+    card.classList.remove('assigned');
+    var av = card.querySelector('.sp-av');
+    if(av){ av.classList.add('sp-vacant'); av.textContent = '?'; }
+  }
+  showSaved('&#128465; Position cleared');
+  closeModal();
+}
+
+function showSaved(msg){
   var ind = document.getElementById('saveIndicator');
+  ind.innerHTML = msg || '&#10003; Saved';
   ind.classList.add('show');
-  setTimeout(function(){ ind.classList.remove('show'); }, 3000);
+  setTimeout(function(){ ind.classList.remove('show'); }, 2800);
 }
 
 function downloadPDF(){
   window.print();
 }
 
-document.getElementById('editModal').addEventListener('click', function(e){
-  if(e.target === this) closeModal();
-});
-document.getElementById('addModal').addEventListener('click', function(e){
-  if(e.target === this) closeAddModal();
+document.addEventListener('click', function(e){
+  if(e.target.id==='editModal') closeModal();
+  if(e.target.id==='addModal') closeAddModal();
 });
 
 </script>
